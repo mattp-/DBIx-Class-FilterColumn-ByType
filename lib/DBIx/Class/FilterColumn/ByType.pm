@@ -43,6 +43,7 @@ sub add_columns {
   $self->next::method(@_);
 
   while (my ($col, $attrs) = splice @_, 0, 2) {
+    next if not $attrs->{data_type};
     if (my $spec = $self->__filter_column_pairs->{$attrs->{data_type}}) {
       $self->filter_column($col => $spec);
     }
