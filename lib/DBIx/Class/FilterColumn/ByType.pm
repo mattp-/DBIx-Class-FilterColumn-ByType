@@ -9,22 +9,42 @@ use warnings;
 
 use base qw/DBIx::Class::FilterColumn/;
 
+__PACKAGE__->mk_classdata(
+  __filter_column_pairs => {}
+);
+
 use namespace::clean;
 
 sub filter_columns_by_type {
-  my ($self, @args) = @_;
+  my ($self, $types, $hash) = @_;
 
-  while (my ($types, $hash) = splice @args, 0, 2) {
-    # flatten
-    for my $type (map { (ref) ? @$_ : $_ } $types) {
-      # find matching columns
-      my $cols = $self->columns_info;
-      while (my ($col, $attrs) = each %$cols) {
-        next unless $attrs->{data_type} eq $type;
+  # flatten
+  my @types = map { (ref) ? @$_ : $_ } $types;
 
-        # pass through to filter_columns. let validation happen there
-        $self->filter_column($col => $hash);
-      }
+  # find matching columns
+  for my $type (@types) {
+    # cache
+    $self->__filter_column_pairs->{$type} = $hash;
+
+    my $cols = $self->columns_info;
+    while (my ($col, $attrs) = each %$cols) {
+      next unless $attrs->{data_type} && $attrs->{data_type} eq $type;
+
+      # pass through to filter_columns. let validation happen there
+      $self->filter_column($col => $hash);
+    }
+  }
+}
+
+
+sub add_columns {
+  my $self = shift;
+
+  $self->next::method(@_);
+
+  while (my ($col, $attrs) = splice @_, 0, 2) {
+    if (my $spec = $self->__filter_column_pairs->{$attrs->{data_type}}) {
+      $self->filter_column($col => $spec);
     }
   }
 }

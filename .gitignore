@@ -3,3 +3,4 @@ manifest/logs/
 manifest/tmp/
 install-log.txt
 DBIx-Class-FilterColumn-ByType-*
+.gitconfig
