@@ -39,43 +39,44 @@ __END__
 
 =head1 SYNOPSIS
 
-In your Schema or DB class add "FilterColumn::ByType" to the top of the component list.
+In your Schema or DB class add "FilterColumn::ByType" to the top of the
+component list.
 
   __PACKAGE__->load_components(qw( FilterColumn::ByType ... ));
 
 Set up filters for the column types you want to convert.
 
  __PACKAGE__->filter_columns_by_type( [qw/varchar text/] => {
-     filter_to_storage => 'to_pennies',
-     filter_from_storage => 'from_pennies',
+     filter_to_storage => 'to_utf8',
+     filter_from_storage => 'from_utf8',
  });
 
- sub to_pennies   { $_[1] * 100 }
+ use Encode;
+ sub to_utf8 { encode('utf8', $_[1]) }
 
- sub from_pennies { $_[1] / 100 }
+ sub from_utf8 { decode('utf8', $_[1]) }
 
  1;
 
 =head1 DESCRIPTION
 
-This module is a subclass of L<DBIx::Class::FilterColumn>, which allows you to attach filters
-by column type, as well as by column name. You should look at L<DBIx::Class::FilterColumn>
-documentation for a full explanation of how that works.
+This module is a subclass of L<DBIx::Class::FilterColumn>, which allows you to
+attach filters by column type, as well as by column name. You should look at
+L<DBIx::Class::FilterColumn> documentation for a full explanation of how that
+works.
 
 =head1 METHODS
 
 =head2 filter_column_by_type
 
- __PACKAGE__->filter_column( coltype => { ... })
+ __PACKAGE__->filter_columns_by_type( coltype => { ... })
 
- __PACKAGE__->filter_column( [qw/coltype/] => { ... })
+ __PACKAGE__->filter_columns_by_type( [qw/coltype/] => { ... })
 
 This method takes two arguments. The first, coltype, can be either an array of
 scalars, or a scalar that describe the type(s) the filters will be attached to.
 The second argument is passed straight through to FilterColumn::filter_column()
-without modifcation. All Filter functionality is inherited directly from
-FilerColumn, so if you looking there for a more indepth explanation of
-functionality would be a good start.
+without modification.
 
 =head1 SEE ALSO
 
