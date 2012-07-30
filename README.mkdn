@@ -4,7 +4,7 @@ DBIx::Class::FilterColumn::ByType - Apply FilterColumn by type instead of name
 
 # VERSION
 
-version 1.122120
+version 1.122121
 
 # SYNOPSIS
 
