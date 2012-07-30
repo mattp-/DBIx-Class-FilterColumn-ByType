@@ -1,2 +1,0 @@
-DBIx-Class-FilterColumn-AutoFilterForColumnType
-===============================================
