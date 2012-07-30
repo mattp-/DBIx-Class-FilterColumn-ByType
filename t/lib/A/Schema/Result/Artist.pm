@@ -3,7 +3,7 @@ package A::Schema::Result::Artist;
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
+use base 'A::Schema::Result';
 
 our $from_storage_ran = 0;
 our $to_storage_ran = 0;
@@ -11,11 +11,6 @@ our $to_storage_ran = 0;
 __PACKAGE__->table('artist');
 
 __PACKAGE__->load_components('FilterColumn::ByType');
-
-__PACKAGE__->filter_columns_by_type([qw/varchar text/] => {
-  filter_from_storage => sub { $from_storage_ran++; $_[1] . '2' },
-  filter_to_storage   => sub { $to_storage_ran++; $_[1] . '1' },
-});
 
 __PACKAGE__->add_columns(
   id => {
