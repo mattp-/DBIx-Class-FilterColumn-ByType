@@ -13,8 +13,6 @@ __PACKAGE__->mk_classdata(
   __filter_column_pairs => {}
 );
 
-use namespace::clean;
-
 sub filter_columns_by_type {
   my ($self, $types, $hash) = @_;
 
