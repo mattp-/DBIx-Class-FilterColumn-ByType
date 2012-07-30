@@ -26,12 +26,18 @@ sub filter_columns_by_type {
     # cache
     $self->__filter_column_pairs->{$type} = $hash;
 
-    my $cols = $self->columns_info;
-    while (my ($col, $attrs) = each %$cols) {
-      next unless $attrs->{data_type} && $attrs->{data_type} eq $type;
+    # this function can be called in two contexts
+    # 1. in a base result class, for applying to an entire schema
+    # 2. in an instantiated result class
+      # in the case of 1, result_source_instance does not exist at invocation.
+    if ($self->can('result_source_instance')) {
+      my $cols = $self->columns_info;
+      while (my ($col, $attrs) = each %$cols) {
+        next unless $attrs->{data_type} && $attrs->{data_type} eq $type;
 
-      # pass through to filter_columns. let validation happen there
-      $self->filter_column($col => $hash);
+        # pass through to filter_columns. let validation happen there
+        $self->filter_column($col => $hash);
+      }
     }
   }
 }
