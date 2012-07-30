@@ -89,8 +89,13 @@ Set up filters for the column types you want to convert.
 
 This module is a subclass of L<DBIx::Class::FilterColumn>, which allows you to
 attach filters by column type, as well as by column name. You should look at
-L<DBIx::Class::FilterColumn> documentation for a full explanation of how that
-works.
+L<DBIx::Class::FilterColumn> documentation for a full explanation of how
+FilterColumn works.
+
+If you'd like to do something like filter all varchars in your entire schema,
+you would only need to create a base result class, then call
+filter_columns_by_type from there. See t/lib/A/Schema inside the dist for an
+example.
 
 =head1 METHODS
 
