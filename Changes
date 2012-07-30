@@ -1,6 +1,6 @@
 {{$NEXT}}
-
-1.122120  2012-07-30 13:01:09 EST5EDT
+   - code cleanup, pod cleanup.
+   - Inheritance now handled properly via mk_classdata, with provided example in t/
 
 1.122090  2012-07-27 11:46:10 EST5EDT
    - initial version
