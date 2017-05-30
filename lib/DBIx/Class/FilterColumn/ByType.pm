@@ -30,8 +30,13 @@ sub filter_columns_by_type {
       # in the case of 1, result_source_instance does not exist at invocation.
     if ($self->can('result_source_instance')) {
       my $cols = $self->columns_info;
+      my %pk_map = map { $_ => 1 } $self->primary_columns;
+
       while (my ($col, $attrs) = each %$cols) {
         next unless $attrs->{data_type} && $attrs->{data_type} eq $type;
+
+        # it isn't allowed to filter primary key columns
+        next if exists $pk_map{$col};
 
         # pass through to filter_columns. let validation happen there
         $self->filter_column($col => $hash);
