@@ -100,6 +100,9 @@ you would only need to create a base result class, then call
 filter_columns_by_type from there. See t/lib/A/Schema inside the dist for an
 example.
 
+I<Note>: as L<DBIx::Class> doesn't allow filtering of primary keys, we skip
+these even if they match the column type.
+
 =head1 METHODS
 
 =head2 filter_column_by_type
