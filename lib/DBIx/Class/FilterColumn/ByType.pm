@@ -30,8 +30,13 @@ sub filter_columns_by_type {
       # in the case of 1, result_source_instance does not exist at invocation.
     if ($self->can('result_source_instance')) {
       my $cols = $self->columns_info;
+      my %pk_map = map { $_ => 1 } $self->primary_columns;
+
       while (my ($col, $attrs) = each %$cols) {
         next unless $attrs->{data_type} && $attrs->{data_type} eq $type;
+
+        # it isn't allowed to filter primary key columns
+        next if exists $pk_map{$col};
 
         # pass through to filter_columns. let validation happen there
         $self->filter_column($col => $hash);
@@ -94,6 +99,9 @@ If you'd like to do something like filter all varchars in your entire schema,
 you would only need to create a base result class, then call
 filter_columns_by_type from there. See t/lib/A/Schema inside the dist for an
 example.
+
+I<Note>: as L<DBIx::Class> doesn't allow filtering of primary keys, we skip
+these even if they match the column type.
 
 =head1 METHODS
 
